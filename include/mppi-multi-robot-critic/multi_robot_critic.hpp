@@ -41,7 +41,7 @@ protected:
     size_t time_step_idx
   );
 
-  bool checkCollisions(
+  bool checkCollision(
     const geometry_msg::msg::Pose & self_pose,
     const geometry_msg::msg::Point & neighbor_pos,
     double combined_radius
