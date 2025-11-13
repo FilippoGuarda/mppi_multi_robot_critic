@@ -17,7 +17,7 @@ void MultiRobotCritic::computeCollisionCosts(){
 }
 
 void MultiRobotCritic::checkCollisions(){
-    
+
 }
 
 void MultiRobotCritic::score(CriticData & data){
@@ -26,3 +26,9 @@ void MultiRobotCritic::score(CriticData & data){
 
 
 } //namespace mppi::critics
+
+#include <pluginlib/class_list_macros.hpp>
+PLUGINLIB_EXPORT_CLASS(
+    mppi::critics::MultiRobotCritic,
+    mppi::critics::CriticFunction
+)
