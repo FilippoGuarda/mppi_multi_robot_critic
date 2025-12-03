@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<library path="nav2_interaction_critic">
+  <class type="nav2_interaction_critic::InteractionAwareCritic"
+         base_class_type="mppi::critics::CriticFunction">
+    <description>Multi-agent interaction-aware MPPI critic with velocity prediction and regulation compliance</description>
+  </class>
+</library>
