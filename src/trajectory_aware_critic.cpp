@@ -2,11 +2,12 @@
  * @file trajectory_aware_critic.cpp
  * @brief Implementation of TrajectoryAwareCritic for multi-robot MPPI coordination
  *
- * Copyright (c) 2024 - Your Organization
+ * Copyright (c) 2025 - University of Bologna
  * Licensed under the Apache License, Version 2.0
  */
 
-#include "nav2_mppi_controller/critics/trajectory_aware_critic.hpp"
+
+#include "mppi_multi_robot_critic/trajectory_aware_critic.hpp"
 #include "pluginlib/class_list_macros.hpp"
 #include <cmath>
 #include <algorithm>

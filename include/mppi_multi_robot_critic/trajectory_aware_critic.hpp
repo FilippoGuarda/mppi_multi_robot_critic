@@ -26,6 +26,7 @@
 #include "nav2_core/controller.hpp"
 #include "nav2_mppi_controller/critic_function.hpp"
 
+
 namespace mppi::critics
 {
 

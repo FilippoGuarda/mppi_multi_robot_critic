@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(trajectory_aware_critic_plugin)
+project(mppi_multi_robot_critic)
 
 # Default to C++17
 if(NOT CMAKE_CXX_STANDARD)
@@ -28,7 +28,7 @@ find_package(Eigen3 REQUIRED)
 
 # Create library
 add_library(${PROJECT_NAME} SHARED
-  src/critics/trajectory_aware_critic.cpp
+  src/trajectory_aware_critic.cpp
 )
 
 # Include directories
