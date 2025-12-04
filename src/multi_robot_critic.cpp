@@ -7,7 +7,7 @@
 namespace mppi::critics
 {
 
-void CostCritic::initialize()
+void MultiRobotCritic::initialize()
 {
   auto getParentParam = parameters_handler_->getParamGetter(parent_name_);
   auto getParam = parameters_handler_->getParamGetter(name_);
@@ -51,7 +51,7 @@ void CostCritic::initialize()
       "in both the costmap and the cost critic.");
     if (costmap_ros_->getUseRadius()) {
       throw nav2_core::ControllerException(
-              "Considering footprint in CostCritic but no robot footprint provided in the "
+              "Considering footprint in MultiRobotCritic but no robot footprint provided in the "
               "costmap (robot radius used instead). Disable considering footprint.");
     }
   }
@@ -62,13 +62,13 @@ void CostCritic::initialize()
 
   RCLCPP_INFO(
     logger_,
-    "InflationCostCritic instantiated with %d power and %f / %f weights. "
+    "InflationMultiRobotCritic instantiated with %d power and %f / %f weights. "
     "Critic will collision check based on %s cost.",
     power_, critical_cost_, weight_, consider_footprint_ ?
     "footprint" : "circular");
 }
 
-float CostCritic::findCircumscribedCost(
+float MultiRobotCritic::findCircumscribedCost(
   std::shared_ptr<nav2_costmap_2d::Costmap2DROS> costmap)
 {
   double result = -1.0;
@@ -114,7 +114,7 @@ float CostCritic::findCircumscribedCost(
   return circumscribed_cost_;
 }
 
-void CostCritic::score(CriticData & data)
+void MultiRobotCritic::score(CriticData & data)
 {
   if (!enabled_) {
     return;
