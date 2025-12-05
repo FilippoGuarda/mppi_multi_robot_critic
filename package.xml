@@ -13,10 +13,9 @@
     Motion Planning in Urban Canals," ICRA 2023.
   </description>
 
-  <maintainer email="your_email@organization.com">Your Name</maintainer>
+  <maintainer email="filippo.guarda96@gmail.com">Filippo Guarda</maintainer>
   <license>Apache-2.0</license>
 
-  <author email="your_email@organization.com">Your Name</author>
 
   <!-- Buildtool dependencies -->
   <buildtool_depend>ament_cmake</buildtool_depend>

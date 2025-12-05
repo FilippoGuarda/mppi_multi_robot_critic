@@ -15,16 +15,16 @@ find_package(tf2_geometry_msgs REQUIRED)
 set(CMAKE_CXX_STANDARD 17)
 
 # ============ Multi-Agent Interaction Critic Library ============
-add_library(nav2_mppi_multi_agent_critic SHARED
-  src/multi_agent_interaction_critic.cpp
+add_library(mppi_multi_robot_critic SHARED
+  src/multi_agent_critic.cpp
 )
 
-target_include_directories(nav2_mppi_multi_agent_critic PUBLIC
+target_include_directories(mppi_multi_robot_critic PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
 
-ament_target_dependencies(nav2_mppi_multi_agent_critic
+ament_target_dependencies(mppi_multi_robot_critic
   rclcpp
   nav2_mppi_controller
   nav2_costmap_2d
@@ -40,7 +40,7 @@ ament_target_dependencies(nav2_mppi_multi_agent_critic
 pluginlib_export_plugin_description_file(nav2_mppi_controller plugin.xml)
 
 # ============ Installation ============
-install(TARGETS nav2_mppi_multi_agent_critic
+install(TARGETS mppi_multi_robot_critic
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin

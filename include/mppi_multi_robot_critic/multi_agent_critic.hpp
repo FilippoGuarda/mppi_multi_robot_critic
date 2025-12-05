@@ -1,33 +1,22 @@
-// Copyright (c) 2024 Your Organization
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 #ifndef MPPI_CRITICS__MULTI_AGENT_INTERACTION_CRITIC_HPP_
-#define MPPI_CRITICS__MULTI_AGENT_INTERACTION_CRITIC_CRITIC_HPP_
+#define MPPI_CRITICS__MULTI_AGENT_INTERACTION_CRITIC_HPP_
 
-#include <string>
 #include <memory>
+#include <string>
 #include <vector>
 #include <map>
 #include <mutex>
+#include <unordered_map>
 
 #include "rclcpp/rclcpp.hpp"
+#include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "geometry_msgs/msg/pose_stamped.hpp"
 #include "geometry_msgs/msg/twist.hpp"
-#include "nav2_msgs/msg/mppi_trajectory.hpp"
+#include "nav2_msgs/msg/trajectory.hpp"
 #include "nav2_costmap_2d/costmap_2d_ros.hpp"
-
-#include "nav2_mppi_controller/critics/critic_function.hpp"
+#include "tf2/utils.h"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
+#include "nav2_mppi_controller/critic_function.hpp"
 #include "nav2_mppi_controller/tools/parameters_handler.hpp"
 
 namespace mppi::critics
@@ -39,42 +28,23 @@ namespace mppi::critics
  */
 struct OtherAgentState
 {
-  std::string frame_id;                  // Robot's frame ID
-  geometry_msgs::msg::PoseStamped pose;  // Last known pose
-  geometry_msgs::msg::Twist velocity;    // Estimated velocity (from trajectory delta)
-  std::vector<geometry_msgs::msg::PoseStamped> predicted_trajectory;  // Predicted future positions
-  rclcpp::Time last_update;              // Timestamp of last update
-  double robot_radius = 0.1;             // Footprint radius for collision checking
+  std::string frame_id;
+  geometry_msgs::msg::PoseStamped pose;
+  geometry_msgs::msg::Twist velocity;
+  std::vector<geometry_msgs::msg::PoseStamped> predicted_trajectory;
+  rclcpp::Time last_update;
+  double robot_radius = 0.1;
 };
 
 /**
  * @class MultiAgentInteractionCritic
  * @brief Critic that penalizes collisions with other agents using trajectory predictions
- *
- * Implements dynamic collision detection as described in Trevisan et al. ICRA 2023:
- * "Multi-Agent Path Integral Control for Interaction-Aware Motion Planning"
- *
- * This critic:
- * 1. Subscribes to other robots' planned trajectories
- * 2. Extracts final trajectory point as predicted goal position
- * 3. Estimates velocity from trajectory deltas
- * 4. Applies discontinuous collision penalty when ego trajectory overlaps with other agents
  */
 class MultiAgentInteractionCritic : public CriticFunction
 {
 public:
   /**
-   * @brief Configure critic parameters
-   */
-  void configure(
-    rclcpp_lifecycle::LifecycleNode::WeakPtr parent,
-    const std::string & parent_name,
-    const std::string & name,
-    const std::shared_ptr<nav2_costmap_2d::Costmap2DROS> & costmap_ros,
-    const std::shared_ptr<nav2_mppi_controller::ParametersHandler> & parameters_handler) override;
-
-  /**
-   * @brief Initialize critic (called after configure)
+   * @brief Initialize critic (called after on_configure)
    */
   void initialize() override;
 
@@ -85,20 +55,20 @@ public:
   void score(CriticData & data) override;
 
 private:
-  // ========== Configuration Parameters ==========
-  double collision_penalty_ = 1000000.0;  // High penalty for collisions (from paper: C_collision)
-  double collision_margin_ = 0.1;         // Safety margin around robot radius
-  bool use_all_trajectory_points_ = false; // Use full trajectory or just endpoint
-  bool estimate_velocity_ = true;          // Compute velocity from trajectory delta
-  double max_agent_distance_ = 10.0;      // Ignore agents further than this
-  double velocity_timeout_ = 1.0;         // Seconds before velocity prediction expires
+  // Configuration Parameters
+  double collision_penalty_ = 1000000.0;
+  double collision_margin_ = 0.1;
+  bool use_all_trajectory_points_ = false;
+  bool estimate_velocity_ = true;
+  double max_agent_distance_ = 10.0;
+  double velocity_timeout_ = 1.0;
+  std::vector<std::string> other_robot_namespaces_;
 
-  // ========== ROS Subscriptions & State ==========
-  std::map<std::string, OtherAgentState> other_agents_;  // Map of agent_name -> state
-  std::map<std::string, rclcpp::SubscriptionBase::SharedPtr> trajectory_subscriptions_;
-  std::mutex agents_mutex_;  // Protects other_agents_ map
-
-  rclcpp::Node::SharedPtr node_;
+  // ROS Subscriptions & State
+  std::map<std::string, OtherAgentState> other_agents_;
+  std::map<std::string, rclcpp::Subscription<nav2_msgs::msg::Trajectory>::SharedPtr> trajectory_subscriptions_;
+  std::mutex agents_mutex_;
+  rclcpp_lifecycle::LifecycleNode::SharedPtr node_;
   std::string robot_namespace_;
 
   // ========== Implementation Methods ==========
@@ -115,7 +85,7 @@ private:
    * @param agent_name Name of robot that published the trajectory
    */
   void trajectory_callback(
-    const nav2_msgs::msg::MPPITrajectory::SharedPtr msg,
+    const nav2_msgs::msg::Trajectory::SharedPtr msg,
     const std::string & agent_name);
 
   /**
@@ -124,7 +94,7 @@ private:
    * @return Last pose in trajectory (or current pose if trajectory empty)
    */
   geometry_msgs::msg::PoseStamped extract_trajectory_endpoint(
-    const nav2_msgs::msg::MPPITrajectory & trajectory) const;
+    const nav2_msgs::msg::Trajectory & trajectory) const;
 
   /**
    * @brief Estimate velocity from consecutive trajectory points
@@ -133,7 +103,7 @@ private:
    * @return Estimated velocity (linear and angular)
    */
   geometry_msgs::msg::Twist estimate_velocity_from_trajectory(
-    const nav2_msgs::msg::MPPITrajectory & trajectory,
+    const nav2_msgs::msg::Trajectory & trajectory,
     double dt) const;
 
   /**

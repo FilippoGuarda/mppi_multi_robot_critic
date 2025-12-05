@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<library path="nav2_mppi_multi_agent_critic">
+<library path="libmppi_multi_robot_critic">
   <class 
     type="mppi::critics::MultiAgentInteractionCritic" 
-    base_class_type="nav2_mppi_controller::CriticFunction">
+    base_class_type="mppi::critics::CriticFunction">
     <description>
       Multi-agent interaction critic for decentralized collision avoidance.
       
