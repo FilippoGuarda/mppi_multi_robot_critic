@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<library path="nav2_mppi_multi_agent_critic">
+  <class 
+    type="mppi::critics::MultiAgentInteractionCritic" 
+    base_class_type="nav2_mppi_controller::CriticFunction">
+    <description>
+      Multi-agent interaction critic for decentralized collision avoidance.
+      
+      Based on Trevisan et al. ICRA 2023: "Multi-Agent Path Integral Control 
+      for Interaction-Aware Motion Planning"
+      
+      Subscribes to other robots' published trajectories and applies discontinuous
+      collision penalties when ego trajectory overlaps with other agents' predicted
+      trajectories. Uses trajectory endpoints as predicted goal positions and 
+      estimates velocities from trajectory deltas.
+    </description>
+  </class>
+</library>

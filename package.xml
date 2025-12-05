@@ -2,66 +2,49 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>mppi_multi_robot_critic</name>
-  <version>0.0.1</version>
+  <version>0.1.0</version>
   <description>
-    MPPI critic plugin for multi-robot collision avoidance using shared optimal trajectories.
+    Multi-agent interaction critic for Nav2 MPPI Controller.
     
-    This plugin implements a critic function for the Nav2 MPPI controller that enables
-    decentralized multi-robot coordination with communication by subscribing to trajectories
-    published by other robots and checking for collisions during trajectory optimization.
+    Implements decentralized collision avoidance using trajectory prediction
+    and velocity estimation based on:
     
-    Based on: Trevisan et al., "Multi-Agent Path Integral Control for Interaction-Aware 
-    Motion Planning in Urban Canals", ICRA 2023
+    Trevisan et al., "Multi-Agent Path Integral Control for Interaction-Aware 
+    Motion Planning in Urban Canals," ICRA 2023.
   </description>
-  
-  <maintainer email="filippo.guarda96@gmail.com">Filippo Guarda</maintainer>
+
+  <maintainer email="your_email@organization.com">Your Name</maintainer>
   <license>Apache-2.0</license>
 
-  <!-- Build system dependencies -->
-  <build_depend>ament_cmake</build_depend>
+  <author email="your_email@organization.com">Your Name</author>
+
+  <!-- Buildtool dependencies -->
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- Build dependencies -->
   <build_depend>rclcpp</build_depend>
-  <build_depend>rclcpp_lifecycle</build_depend>
-  <build_depend>geometry_msgs</build_depend>
-  <build_depend>nav_msgs</build_depend>
-  <build_depend>nav2_msgs</build_depend>
-  <build_depend>nav2_core</build_depend>
   <build_depend>nav2_mppi_controller</build_depend>
   <build_depend>nav2_costmap_2d</build_depend>
+  <build_depend>nav2_core</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>nav2_msgs</build_depend>
   <build_depend>pluginlib</build_depend>
   <build_depend>tf2</build_depend>
   <build_depend>tf2_geometry_msgs</build_depend>
-  <build_depend>tf2_ros</build_depend>
-  <build_depend>Eigen</build_depend>
 
-  <!-- Runtime/Exec dependencies -->
+  <!-- Execution dependencies -->
   <exec_depend>rclcpp</exec_depend>
-  <exec_depend>rclcpp_lifecycle</exec_depend>
-  <exec_depend>geometry_msgs</exec_depend>
-  <exec_depend>nav_msgs</exec_depend>
-  <exec_depend>nav2_msgs</exec_depend>
-  <exec_depend>nav2_core</exec_depend>
   <exec_depend>nav2_mppi_controller</exec_depend>
   <exec_depend>nav2_costmap_2d</exec_depend>
+  <exec_depend>nav2_core</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>nav2_msgs</exec_depend>
   <exec_depend>pluginlib</exec_depend>
   <exec_depend>tf2</exec_depend>
   <exec_depend>tf2_geometry_msgs</exec_depend>
-  <exec_depend>tf2_ros</exec_depend>
-  <exec_depend>Eigen</exec_depend>
-
-  <!-- Test dependencies -->
-  <test_depend>ament_cmake_gtest</test_depend>
-  <test_depend>ament_lint_auto</test_depend>
-  <test_depend>ament_lint_common</test_depend>
-
-  <!-- Tool dependencies -->
-  <buildtool_depend>ament_cmake</buildtool_depend>
-  <buildtool_depend>rosidl_default_generators</buildtool_depend>
 
   <!-- Export plugin description -->
   <export>
     <build_type>ament_cmake</build_type>
-    <!-- Tell pluginlib where to find the plugins -->
-    <nav2_mppi_controller plugin="${prefix}/critics_plugins.xml"/>
   </export>
-
 </package>
